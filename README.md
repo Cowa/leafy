@@ -1,7 +1,7 @@
 # Leafy
 > LEaFy - Language procEssing Flow
 
-An UIMA-like... but KISS
+An UIMA-like... but concurrent and distributed by nature
 
 ## Usage
 

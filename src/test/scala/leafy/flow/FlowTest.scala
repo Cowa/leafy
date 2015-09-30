@@ -2,14 +2,20 @@ package leafy.flow
 
 import org.scalatest._
 
-import leafy.models.{Annotation, Bucket}
-import leafy.analysis.{WhitespaceTokenizer, SimpleAnalysisEngineFixture}
+import akka.actor.{Props, ActorSystem}
+
+import leafy.models.Start
+import leafy.analysis.{WhitespaceTokenizer, DumbAnalysisEngine}
 
 class FlowTest extends FlatSpec with Matchers {
 
   "Running a flow" should "process all analysis engines" in {
-    val result = Flow.run("Touté ko", WhitespaceTokenizer, SimpleAnalysisEngineFixture)
+    implicit val system = ActorSystem()
+    val flow0 = Flow(Props[WhitespaceTokenizer], Props[DumbAnalysisEngine])
 
-    assert(result === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(6, 8, "ko"), Annotation(1,2,"yolo"))))
+    val flow1 = Flow(Props[WhitespaceTokenizer], Props[WhitespaceTokenizer], Props[WhitespaceTokenizer])
+
+    flow0 ! Start("Yolo ok")
+    flow1 ! Start("Yolo potatoes")
   }
 }
