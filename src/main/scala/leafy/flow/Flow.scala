@@ -1,11 +1,11 @@
 package leafy.flow
 
 import akka.actor._
-
 import leafy.models.{Start, Bucket, Process, ProcessDone}
 
 object Flow {
-  def apply(engines: Props*)(implicit system: ActorSystem): ActorRef = system.actorOf(Props(new Flow(engines)))
+  def pipeline(engines: Props*)(implicit system: ActorSystem): ActorRef = system.actorOf(Props(new Flow(engines)))
+  def run(flow: ActorRef, source: String) = flow ! Start(source)
 }
 
 class Flow(var engines: Seq[Props]) extends Actor with ActorLogging {

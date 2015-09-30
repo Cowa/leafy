@@ -1,8 +1,7 @@
 package leafy.analysis
 
-import leafy.models.{Process, ProcessDone, Bucket}
-
 import akka.actor.{Actor, ActorLogging}
+import leafy.models.{Process, ProcessDone, Bucket}
 
 trait AnalysisEngine extends Actor with ActorLogging {
   def process(b: Bucket): Bucket
