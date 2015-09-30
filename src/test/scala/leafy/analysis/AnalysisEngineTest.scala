@@ -21,6 +21,6 @@ class AnalysisEngineTest extends FlatSpec with Matchers {
     val f = fixture
     val result = WhitespaceTokenizer.process(f.bucket)
 
-    assert(result === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(1, 2, "ko"))))
+    assert(result === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(6, 8, "ko"))))
   }
 }

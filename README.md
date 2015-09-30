@@ -1,2 +1,12 @@
-# leafy
-LEaFy - Language procEssing Flow
+# Leafy
+> LEaFy - Language procEssing Flow
+
+An UIMA-like... but KISS
+
+## Usage
+
+@todo
+
+## Architecture
+
+@todo
