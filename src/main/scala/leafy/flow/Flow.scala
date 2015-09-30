@@ -1,9 +1,12 @@
 package leafy.flow
 
+import leafy.models.Bucket
 import leafy.analysis.AnalysisEngine
 
-class Flow {
-  def pipeline(source: String)(engines: AnalysisEngine*) = {
-    //engines.map()
+object Flow {
+  def run(source: String, engines: AnalysisEngine*): Bucket = {
+   val bucket = Bucket(source)
+
+    engines.foldLeft(bucket)((acc, e) => e.process(acc))
   }
 }

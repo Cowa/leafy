@@ -1,9 +1,10 @@
 package leafy.models
 
-case class Bucket(data: List[Data]) {
-  def add(d: Data) = Bucket(data :+ d)
+object Bucket {
+  def apply(source: String): Bucket = Bucket(source, List())
 }
 
-sealed trait Data
-
-case class Annotation(begin: Int, end: Int, text: String) extends Data
+case class Bucket(source: String, data: List[Data]) {
+  def add(d: Data) = Bucket(source, data :+ d)
+  def add(d: List[Data]) = Bucket(source, data ++ d)
+}
