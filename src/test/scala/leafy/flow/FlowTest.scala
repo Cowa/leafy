@@ -16,7 +16,7 @@ class FlowTest extends FlatSpec with Matchers {
     val flow0 = Flow.run("Yolo ok", WhitespaceTokenizer(), Props[DumbAnalysisEngine])
     val flow1 = Flow.run("Yolo potaotes", WhitespaceTokenizer(), WhitespaceTokenizer(), WhitespaceTokenizer())
 
-    flow0.mapTo[Bucket].map(x => println(x))
-    flow1.mapTo[Bucket].map(x => println(x))
+    flow0.map(x => println(x))
+    flow1.map(x => println(x))
   }
 }

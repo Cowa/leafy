@@ -10,9 +10,9 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 
 object Flow {
-  def run(source: String, engines: Props*)(implicit s: ActorSystem): Future[Any] = {
+  def run(source: String, engines: Props*)(implicit s: ActorSystem): Future[Bucket] = {
     val flow = s.actorOf(Props(new Flow(engines)))
-    flow.ask(Start(source))(Timeout(5 hours))
+    flow.ask(Start(source))(Timeout(5 hours)).mapTo[Bucket]
   }
 }
 
