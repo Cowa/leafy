@@ -9,6 +9,6 @@ trait AnalysisEngine extends Actor with ActorLogging {
   def receive = {
     case Process(b) =>
       log.info(s"${this.getClass.getSimpleName} processing...")
-      sender() ! ProcessDone(process(b))
+      sender ! ProcessDone(process(b))
   }
 }

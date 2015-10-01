@@ -1,6 +1,11 @@
 package leafy.analysis
 
+import akka.actor.Props
 import leafy.models.{Annotation, Bucket}
+
+object WhitespaceTokenizer {
+  def apply(): Props = Props(new WhitespaceTokenizer)
+}
 
 class WhitespaceTokenizer extends AnalysisEngine {
   def process(b: Bucket): Bucket = {
