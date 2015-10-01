@@ -45,10 +45,10 @@ case class NamedEntity(text: String) extends Data
 You can chain several analysis engines through a flow: 
 
 ```scala
-import leafy.core
 import leafy.flow.Flow
+import leafy.analysis.AE
 
-Flow.run("My source text #data", Props[WhitespaceTokenizer], Props[NamedEntityRecognition], ...)
+Flow.run("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition], ...)
 ```
 
 The first parameter is the text data which will be processed.  

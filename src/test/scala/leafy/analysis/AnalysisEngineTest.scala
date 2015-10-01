@@ -2,25 +2,22 @@ package leafy.analysis
 
 import org.scalatest._
 
+import akka.actor.ActorSystem
+import akka.testkit.{TestActorRef, TestKit}
+
 import leafy.models.{Annotation, Bucket}
 
-class AnalysisEngineTest extends FlatSpec with Matchers {
-
-  def fixture = new {
-    val bucket = Bucket("Touté ko")
-  }
+class AnalysisEngineTest extends TestKit(ActorSystem("testSystem")) with FlatSpecLike with Matchers {
 
   "AnalysisEngine" should "process and return a bucket" in {
-    val f = fixture
-    val result = new DumbAnalysisEngine().process(f.bucket)
+    val engine = TestActorRef[DumbAnalysisEngine].underlyingActor
 
-    assert(result === Bucket("Touté ko", List(Annotation(1, 2, "yolo"))))
+    assert(engine.process(Bucket("Touté ko")) === Bucket("Touté ko", List(Annotation(1, 2, "yolo"))))
   }
 
   "WhitespaceTokenizer" should "cut words on whitespace" in {
-    val f = fixture
-    val result = new WhitespaceTokenizer().process(f.bucket)
+    val engine = TestActorRef[WhitespaceTokenizer].underlyingActor
 
-    assert(result === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(6, 8, "ko"))))
+    assert(engine.process(Bucket("Touté ko")) === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(6, 8, "ko"))))
   }
 }
