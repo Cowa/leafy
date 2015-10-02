@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.11.7"
 
+assemblyJarName in assembly := "leafy.jar"
+
 scalacOptions ++= Seq(
   "-Xlint",
   "-deprecation",
