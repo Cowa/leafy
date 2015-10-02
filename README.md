@@ -1,5 +1,4 @@
 # Leafy
-> LEaFy - Language procEssing Flow
 
 An UIMA-like... but lightweight, concurrent and distributed by nature
 
@@ -10,6 +9,7 @@ An UIMA-like... but lightweight, concurrent and distributed by nature
 Create your engines by implementing the `AnalysisEngine` trait and its `process` method : 
 
 ```scala
+import leafy.analysis.AnalysisEngine
 import leafy.models.{Annotation, Bucket}
 
 class WhitespaceTokenizer extends AnalysisEngine {
@@ -45,8 +45,8 @@ case class NamedEntity(text: String) extends Data
 You can chain several analysis engines through a flow: 
 
 ```scala
+import leafy._
 import leafy.flow.Flow
-import leafy.analysis.AE
 
 Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition], ...)
 ```

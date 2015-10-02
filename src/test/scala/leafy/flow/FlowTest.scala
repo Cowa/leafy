@@ -3,7 +3,7 @@ package leafy.flow
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 
-import leafy.core
+import leafy._
 import leafy.analysis._
 import leafy.models.{Annotation, Bucket}
 
