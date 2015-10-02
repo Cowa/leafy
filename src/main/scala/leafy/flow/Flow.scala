@@ -8,30 +8,28 @@ import leafy.models._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.postfixOps
 
 object Flow {
-  def run(source: String, engines: Props*)(implicit s: ActorSystem): Future[Bucket] = {
-    val flow = s.actorOf(Props(new Flow(engines)))
-    flow.ask(Start(source))(Timeout(24 hours)).mapTo[Bucket]
-  }
+  def apply(source: String, engines: Props*)(implicit s: ActorSystem): Future[Bucket] = start(Bucket(source), engines)
+
+  def start(bucket: Bucket, engines: Seq[Props])(implicit s: ActorSystem): Future[Bucket] =
+    s.actorOf(Props(new Flow(engines))).ask(Start(bucket))(Timeout(24 hours)).mapTo[Bucket]
+
+  def combine(bucket: Future[Bucket], engines: Props*)(implicit s: ActorSystem): Future[Bucket] =
+    bucket.flatMap(b => start(b, engines))
 }
 
-class Flow(var engines: Seq[Props]) extends Actor with ActorLogging {
+class Flow(var engines: Seq[Props]) extends Actor {
   var origin: ActorRef = ActorRef.noSender
 
   def receive = {
-    case Start(source) =>
+    case Start(b) =>
       origin = sender()
-      log.info("Flow started")
-      processNext(Bucket(source))
-
-    case ProcessDone(b) if engines.nonEmpty =>
-      log.info("Process next...")
       processNext(b)
-
-    case ProcessDone(b) =>
-      log.info("All work done")
-      origin ! b
+    case ProcessDone(b) if engines.nonEmpty => processNext(b)
+    case ProcessDone(b) => origin ! b
   }
 
   def processNext(b: Bucket) = {

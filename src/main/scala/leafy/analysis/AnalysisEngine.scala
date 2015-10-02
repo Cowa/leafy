@@ -1,14 +1,12 @@
 package leafy.analysis
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.Actor
 import leafy.models.{Process, ProcessDone, Bucket}
 
-trait AnalysisEngine extends Actor with ActorLogging {
+trait AnalysisEngine extends Actor {
   def process(b: Bucket): Bucket
 
   def receive = {
-    case Process(b) =>
-      log.info(s"${this.getClass.getSimpleName} processing...")
-      sender ! ProcessDone(process(b))
+    case Process(b) => sender ! ProcessDone(process(b))
   }
 }

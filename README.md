@@ -48,7 +48,7 @@ You can chain several analysis engines through a flow:
 import leafy.flow.Flow
 import leafy.analysis.AE
 
-Flow.run("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition], ...)
+Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition], ...)
 ```
 
 The first parameter is the text data which will be processed.  
