@@ -1,15 +1,25 @@
 package leafy.flow
 
 import org.scalatest._
+import org.scalatest.concurrent.ScalaFutures
 
+import leafy.core
+import leafy.analysis._
 import leafy.models.{Annotation, Bucket}
-import leafy.analysis.{WhitespaceTokenizer, SimpleAnalysisEngineFixture}
 
-class FlowTest extends FlatSpec with Matchers {
+import scala.concurrent.ExecutionContext.Implicits.global
+
+class FlowTest extends FlatSpec with Matchers with ScalaFutures {
 
   "Running a flow" should "process all analysis engines" in {
-    val result = Flow.run("Touté ko", WhitespaceTokenizer, SimpleAnalysisEngineFixture)
+    val flow0 = Flow.run("Yolo ok", AE[WhitespaceTokenizer], AE[DumbAnalysisEngine])
+    val flow1 = Flow.run("Yolo potaotes", AE[WhitespaceTokenizer], AE[WhitespaceTokenizer], AE[WhitespaceTokenizer])
 
-    assert(result === Bucket("Touté ko", List(Annotation(0, 5, "Touté"), Annotation(6, 8, "ko"), Annotation(1,2,"yolo"))))
+    flow1.map(x => println(x))
+    flow0.map(x => println(x))
+
+    whenReady(flow0) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"))))
+    }
   }
 }

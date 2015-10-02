@@ -2,7 +2,7 @@ package leafy.analysis
 
 import leafy.models.{Annotation, Bucket}
 
-object WhitespaceTokenizer extends AnalysisEngine {
+class WhitespaceTokenizer extends AnalysisEngine {
   def process(b: Bucket): Bucket = {
     var cursor = 0
     var tokens = List[Annotation]()
