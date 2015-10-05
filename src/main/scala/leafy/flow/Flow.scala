@@ -17,8 +17,11 @@ object Flow {
   def start(bucket: Bucket, engines: Seq[Props])(implicit s: ActorSystem): Future[Bucket] =
     s.actorOf(Props(new Flow(engines))).ask(Start(bucket))(Timeout(24 hours)).mapTo[Bucket]
 
-  def combine(bucket: Future[Bucket], engines: Props*)(implicit s: ActorSystem): Future[Bucket] =
+  def branch(bucket: Future[Bucket], engines: Props*)(implicit s: ActorSystem): Future[Bucket] =
     bucket.flatMap(b => start(b, engines))
+
+  def merge(buckets: Future[Bucket]*): Future[Bucket] =
+    Future.sequence(buckets).map(_.foldLeft(Bucket(""))((acc, b) => acc.merge(b)))
 }
 
 class Flow(var engines: Seq[Props]) extends Actor {

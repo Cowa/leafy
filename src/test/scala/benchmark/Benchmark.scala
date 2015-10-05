@@ -1,6 +1,8 @@
+package benchmark
+
 import leafy._
-import leafy.flow._
 import leafy.analysis._
+import leafy.flow._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
@@ -20,7 +22,7 @@ object Benchmark {
       y <- m1
       z <- m2
       w <- m3
-    } yield {
+    } {
       val t1 = System.nanoTime
       println(s"Done in: ${(t1 - t0) / 1e9}s")
       core.shutdown()
