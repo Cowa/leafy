@@ -37,4 +37,36 @@ class FlowTest extends FlatSpec with Matchers with ScalaFutures {
       assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"))))
     }
   }
+
+  "Branching and merging flow" should "make possible to create complex and efficient flow" in {
+    // This whole flow is really stupid...
+    val flow0 = Flow("Yolo ok", AE[WhitespaceTokenizer])
+
+    val flow1 = Flow.branch(flow0, AE[DumbAnalysisEngine])
+    val flow2 = Flow.branch(flow0, AE[DumbAnalysisEngine])
+
+    val flow3 = Flow.merge(flow1, flow2)
+
+    val flow4 = Flow.branch(flow3, AE[DumbAnalysisEngine])
+
+    whenReady(flow0) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"))))
+    }
+
+    whenReady(flow1) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"))))
+    }
+
+    whenReady(flow2) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"))))
+    }
+
+    whenReady(flow3) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"))))
+    }
+
+    whenReady(flow4) { x =>
+      assert(x === Bucket("Yolo ok", List(Annotation(0,4,"Yolo"), Annotation(5,7,"ok"), Annotation(1,2,"yolo"), Annotation(1,2,"yolo"))))
+    }
+  }
 }

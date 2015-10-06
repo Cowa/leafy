@@ -1,8 +1,31 @@
-# Leafy
+# leafy
+> Temporary name... and kind of a Proof Of Concept for now :)
 
 An UIMA-like... but lightweight, concurrent and distributed by nature
 
+## Why leafy?
+
+It lets you build simple (but powerful) **flows** to leverage your unstructured data.  
+
+A flow can combine multiple **analysis engines** and each flow can be branched with another flow.  
+
+**Branches** are run concurrently, making flows efficient and smart.  
+
+Branches can also be merged and go to another flow... Unlimited power!  
+
+Oh and by the way, flows and analysis engines are **distributed-ready** by design. Nice right?   
+
+### Example illustrations
+
+In Natural Language Processing, you could make something like this:  
+
+![simpleflowleafy](https://cloud.githubusercontent.com/assets/1422403/10304375/ff86ed7e-6c19-11e5-95b2-aa8f9a9de81c.png)
+
 ## Usage
+
+### Bucket
+
+// @todo
 
 ### Analysis engine
 
@@ -55,6 +78,9 @@ The first parameter is the text data which will be processed.
 The others are all the engines you want to use.  
 
 It returns a **future** bucket containing all the data set by the engines.
+
+// @todo Branches and merges  
+// + examples
 
 ## Architecture
 
