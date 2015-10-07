@@ -63,7 +63,9 @@ import leafy.models.Data
 case class NamedEntity(text: String) extends Data
 ```
 
-### Flow (pipeline)
+### Flow
+
+#### Simple flows
 
 You can chain several analysis engines through a flow: 
 
@@ -71,7 +73,7 @@ You can chain several analysis engines through a flow:
 import leafy._
 import leafy.flow.Flow
 
-Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition], ...)
+Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition])
 ```
 
 The first parameter is the text data which will be processed.  
@@ -79,8 +81,33 @@ The others are all the engines you want to use.
 
 It returns a **future** bucket containing all the data set by the engines.
 
-// @todo Branches and merges  
-// + examples
+#### Branch flows 
+
+```scala
+import leafy._
+import leafy.flow.Flow
+
+val startFlow = Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition])
+
+val branch0 = Flow.branch(startFlow, AE[SomeAE], AE[AnotherAE])
+val branch1 = Flow.branch(startFlow, AE[Stuff], AE[OkWhyNot])
+```
+
+Each branch will run **concurrently**.  
+
+#### Merge flows 
+
+```scala
+import leafy._
+import leafy.flow.Flow
+
+// ...
+
+val merged = Flow.merge(branch0, branch1, branch2)
+
+// You can branched it to another flows
+val continue = Flow.branch(merged, AE[...])
+```
 
 ## Architecture
 
