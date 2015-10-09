@@ -76,6 +76,8 @@ import leafy.flow.Flow
 Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition])
 ```
 
+![simpleflow](https://cloud.githubusercontent.com/assets/1422403/10395259/37f5430c-6e9c-11e5-80b8-288f68ece4b5.png)
+
 The first parameter is the text data which will be processed.  
 The others are all the engines you want to use.  
 
@@ -93,6 +95,8 @@ val branch0 = Flow.branch(startFlow, AE[SomeAE], AE[AnotherAE])
 val branch1 = Flow.branch(startFlow, AE[Stuff], AE[OkWhyNot])
 ```
 
+![branches](https://cloud.githubusercontent.com/assets/1422403/10395262/3f9e605c-6e9c-11e5-88fc-35372e79d3ea.png)
+
 Each branch will run **concurrently**.  
 
 #### Merge flows 
@@ -108,6 +112,8 @@ val merged = Flow.merge(branch0, branch1, branch2)
 // You can branched it to another flows
 val continue = Flow.branch(merged, AE[...])
 ```
+
+![merged](https://cloud.githubusercontent.com/assets/1422403/10395266/47579a2a-6e9c-11e5-85fd-c5cfef152d92.png)
 
 ## Architecture
 
