@@ -1,13 +1,13 @@
 # leafy
-> Temporary name... and kind of a Proof Of Concept for now :)
+> Temporary name and kind of a POC for now
 
-An UIMA-like... but lightweight, concurrent and distributed by nature
+An UIMA-like... but lightweight, modern, concurrent and distributed by nature
 
 ## Why leafy?
 
 It lets you build simple (but powerful) **flows** to leverage your unstructured data.  
 
-A flow can combine multiple **analysis engines** and each flow can be branched with another flow.  
+A flow can combine multiple **analysis engines** and each flow can be branched into another flow.  
 
 **Branches** are run concurrently, making flows efficient and smart.  
 
@@ -15,7 +15,7 @@ Branches can also be merged and go to another flow... Unlimited power!
 
 Oh and by the way, flows and analysis engines are **distributed-ready** by design. Nice right?   
 
-### Example illustrations
+### Illustration
 
 In Natural Language Processing, you could make something like this:  
 
@@ -25,7 +25,20 @@ In Natural Language Processing, you could make something like this:
 
 ### Bucket
 
-// @todo
+The bucket is the way of communication between analysis engines.  
+You put everything you want in it. And the next engines in the flow will be able to get it if they need it.
+
+For now this is what buckets look like:
+```scala
+case class Bucket(source: String, data: List[Data]) {
+  def add(d: Data) = Bucket(source, data :+ d)
+  def add(d: List[Data]) = Bucket(source, data ++ d)
+  def select[T: ClassTag] = data.collect({case t: T => t})
+  def merge(b: Bucket) = Bucket(b.source, (data ++ b.data).distinct)
+}
+```
+
+This is an immutable structure.
 
 ### Analysis engine
 
@@ -52,6 +65,7 @@ class WhitespaceTokenizer extends AnalysisEngine {
 ```
 
 Annotations and other results must be put inside the bucket.  
+And the last expression **must** be a bucket.
 
 ### Data type
 
@@ -76,7 +90,9 @@ import leafy.flow.Flow
 Flow("My source text #data", AE[WhitespaceTokenizer], AE[NamedEntityRecognition])
 ```
 
-![simpleflow](https://cloud.githubusercontent.com/assets/1422403/10395259/37f5430c-6e9c-11e5-80b8-288f68ece4b5.png)
+<p align="center">
+  <img src="https://cloud.githubusercontent.com/assets/1422403/10395259/37f5430c-6e9c-11e5-80b8-288f68ece4b5.png" />
+</p>
 
 The first parameter is the text data which will be processed.  
 The others are all the engines you want to use.  
@@ -117,8 +133,14 @@ val continue = Flow.branch(merged, AE[...])
 
 ## Architecture
 
-// @todo
+// @todo, explain how works this beauty :lipstick::kissing_heart:
+
+## To do
+
+- Better bucket structure for large processing
+- Simple and sexy resources management (avoid the UIMA ugly way)
+- Maybe switch to akka-stream... not sure yet
 
 ## Powered by
 
-**Akka** <3
+**Scala**, **Akka** <3
